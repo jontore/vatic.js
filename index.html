@@ -506,6 +506,7 @@
         };
 
         bbox.resizable({
+          aspectRatio: 16 / 9,
           containment: 'parent',
           handles: {
             n: createHandleDiv('ui-resizable-handle ui-resizable-n'),
@@ -515,7 +516,8 @@
           },
           stop: (e, ui) => {
             let position = bbox.position();
-            onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
+            let height = Math.round(Math.round(bbox.width()) * (9/16));
+            onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), height);
           }
         });
 
@@ -524,7 +526,8 @@
           handle: createHandleDiv('handle center-drag'),
           stop: (e, ui) => {
             let position = bbox.position();
-            onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), Math.round(bbox.height()));
+            let height = Math.round(Math.round(bbox.width()) * (9/16));
+            onChange(Math.round(position.left), Math.round(position.top), Math.round(bbox.width()), height);
           }
         });
       }
@@ -552,12 +555,13 @@
 
         if (tmpAnnotatedObject !== null) {
           tmpAnnotatedObject.width = Math.abs(mouse.x - mouse.startX);
-          tmpAnnotatedObject.height = Math.abs(mouse.y - mouse.startY);
+          let height = tmpAnnotatedObject.width * (9/16);
+          tmpAnnotatedObject.height = height;
           tmpAnnotatedObject.x = (mouse.x - mouse.startX < 0) ? mouse.x : mouse.startX;
           tmpAnnotatedObject.y = (mouse.y - mouse.startY < 0) ? mouse.y : mouse.startY;
 
           tmpAnnotatedObject.dom.style.width = tmpAnnotatedObject.width + 'px';
-          tmpAnnotatedObject.dom.style.height = tmpAnnotatedObject.height + 'px';
+          tmpAnnotatedObject.dom.style.height = height + 'px';
           tmpAnnotatedObject.dom.style.left = tmpAnnotatedObject.x + 'px';
           tmpAnnotatedObject.dom.style.top = tmpAnnotatedObject.y + 'px';
         }
@@ -571,7 +575,8 @@
         if (tmpAnnotatedObject != null) {
           let annotatedObject = new AnnotatedObject();
           annotatedObject.dom = tmpAnnotatedObject.dom;
-          let bbox = new BoundingBox(tmpAnnotatedObject.x, tmpAnnotatedObject.y, tmpAnnotatedObject.width, tmpAnnotatedObject.height);
+          let h = tmpAnnotatedObject.width * (9/16);
+          let bbox = new BoundingBox(tmpAnnotatedObject.x, tmpAnnotatedObject.y, tmpAnnotatedObject.width, h);
           annotatedObject.add(new AnnotatedFrame(player.currentFrame, bbox, true));
           annotatedObjectsTracker.annotatedObjects.push(annotatedObject);
           tmpAnnotatedObject = null;
@@ -579,6 +584,7 @@
           interactify(
             annotatedObject.dom,
             (x, y, width, height) => {
+              //keep ratio to 16:9, only adjust height,
               let bbox = new BoundingBox(x, y, width, height);
               annotatedObject.add(new AnnotatedFrame(player.currentFrame, bbox, true));
             }
