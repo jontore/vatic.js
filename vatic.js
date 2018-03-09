@@ -441,12 +441,12 @@ class AnnotatedObjectsTracker {
 
           optionalOpticalFlowInit.then(() => {
             let newBboxes;
+            newBboxes = bboxes;
             if (hasAnyBbox) {
               let imageData = this.imageData(img);
-              newBboxes = this.opticalFlow.track(imageData, bboxes);
+              // newBboxes = this.opticalFlow.track(imageData, bboxes);
               this.lastFrame = frameNumber;
             } else {
-              newBboxes = bboxes;
             }
 
             for (let i = 0; i < toCompute.length; i++) {
